@@ -166,3 +166,59 @@ with tab_collab:
         st.dataframe(mes_elements, use_container_width=True, hide_index=True)
     else:
         st.info("Aucune compétence ne vous est actuellement attribuée.")
+
+if rh:
+    with tab_RH:
+
+        df_rh = inventaire.merge(
+            organisation[["id", "division", "departement", "secteur"]],
+            left_on="noeud",
+            right_on="id",
+            how="left",
+        )
+        df_rh["sans_suppleant"] = df_rh["Suppléant 1"].fillna("").eq("") & df_rh[
+            "Suppléant 2"
+        ].fillna("").eq("")
+        df_rh["nb_sans_suppleant"] = df_rh["sans_suppleant"].astype(int)
+
+        rh_division = (
+            df_rh.groupby("division", dropna=False)
+            .agg(
+                nb_competences=("noeud", "count"),
+                nb_sans_suppleant=("nb_sans_suppleant", "sum"),
+            )
+            .reset_index()
+        )
+
+        rh_division["taux_sans_suppleant"] = (
+            rh_division["nb_sans_suppleant"] / rh_division["nb_competences"]
+        ).round(3)
+        rh_departement = (
+            df_rh.groupby(["division", "departement"], dropna=False)
+            .agg(
+                nb_competences=("noeud", "count"),
+                nb_sans_suppleant=("nb_sans_suppleant", "sum"),
+            )
+            .reset_index()
+        )
+
+        rh_departement["taux_sans_suppleant"] = (
+            rh_departement["nb_sans_suppleant"] / rh_departement["nb_competences"]
+        ).round(3)
+
+        st.subheader("Vision globale RH")
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Compétences totales", int(len(df_rh)), border=True)
+        c2.metric("Sans suppléant", int(df_rh["nb_sans_suppleant"].sum()), border=True)
+        c3.metric(
+            "Taux sans suppléant",
+            f"{(df_rh['nb_sans_suppleant'].sum() / len(df_rh) * 100):.1f} %",
+            border=True,
+        )
+
+        st.markdown("### Par division")
+        st.dataframe(rh_division, use_container_width=True, hide_index=True)
+
+        st.markdown("### Par département")
+        st.dataframe(rh_departement, use_container_width=True, hide_index=True)
