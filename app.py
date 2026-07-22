@@ -13,12 +13,21 @@ with st.sidebar:
     selected_user = st.selectbox(
         "Collaborateur",
         options=records,
-        format_func=lambda u: u["collaborateur"],
+        format_func=lambda u: (
+            f"🧑‍💼 {u['collaborateur']}"
+            if u.get("Manager") and u.get("RH")
+            else (
+                f"👔 {u['collaborateur']}"
+                if u.get("Manager")
+                else f"🧭 {u['collaborateur']}" if u.get("RH") else u["collaborateur"]
+            )
+        ),
         key="user_connecte",
         placeholder="Choisir un collaborateur",
     )
     st.session_state["collaborateur_connecte"] = selected_user["collaborateur"]
     st.session_state["rh_connecte"] = selected_user["RH"]
+    st.session_state["manager_connecte"] = selected_user["Manager"]
 
     st.divider()
 

@@ -4,6 +4,7 @@ from utils import metric_card
 
 user = st.session_state.get("collaborateur_connecte")
 rh = st.session_state.get("rh_connecte")
+manager = st.session_state.get("manager_connecte")
 
 st.title("Home")
 st.caption("Vue synthétique de la suppléance pour l'utilisateur connecté")
@@ -77,71 +78,33 @@ mes_elements["Secteurs"] = mes_elements["noeud"].astype(int).map(organisation_di
 mes_elements = mes_elements[
     [
         "noeud",
-        "Secteurs",
-        "type",
+        "nature",
+        "caractère",
         "description",
         "titulaire",
         "Suppléant 1",
         "Suppléant 2",
         "status",
+        "pourcentage",
+        "documentation",
+        "update_at",
     ]
 ]
 
+# Mise en place de la structure des onglets en fonction du rôle de l'utilisateur connecté
 if rh:
-    tab_collab, tab_manager, tab_RH = st.tabs(
-        ["Vue collaborateur", "Vue manager", "Vision RH"]
-    )
-else:
+    if manager:
+        tab_collab, tab_manager, tab_RH = st.tabs(
+            ["Vue collaborateur", "Vue manager", "Vision RH"]
+        )
+    else:
+        tab_collab, tab_RH = st.tabs(["Vue collaborateur", "Vision RH"])
+elif manager:
     tab_collab, tab_manager = st.tabs(["Vue collaborateur", "Vue manager"])
+else:
+    (tab_collab,) = st.tabs(["Vue collaborateur"])
 
-with tab_manager:
-    st.subheader("Mes responsabilités organisationnelles")
-
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        metric_card(
-            "🏢 Secteurs dont je suis responsable",
-            nb_noeuds_responsable,
-            seuil_orange=None,
-            seuil_rouge=None,
-        )
-
-    with c2:
-        metric_card(
-            "📚 Compétences unique ou rares identifiées",
-            nb_elements_mes_noeuds,
-            seuil_orange=None,
-            seuil_rouge=None,
-        )
-
-    with c3:
-        metric_card(
-            "⚠️ Compétences sans suppléant sur mes secteurs",
-            nb_sans_suppleant,
-            seuil_orange=None,
-            seuil_rouge=1,
-        )
-
-    col_a, col_b = st.columns(2)
-
-    with col_a:
-        st.markdown("### Mes noeuds organisationnels")
-        if not mes_noeuds.empty:
-            st.dataframe(mes_noeuds, use_container_width=True, hide_index=True)
-        else:
-            st.info("Vous n'êtes responsable d'aucun noeud organisationnel.")
-
-    with col_b:
-        st.markdown("### Compétences sans suppléant")
-        if not elements_sans_suppleant.empty:
-            st.dataframe(
-                elements_sans_suppleant, use_container_width=True, hide_index=True
-            )
-        else:
-            st.success(
-                "Toutes les compétences de vos noeuds ont au moins un suppléant."
-            )
-
+# Onglet commun à tous les utilisateurs
 with tab_collab:
     st.subheader("Mes Compétences")
 
@@ -167,6 +130,57 @@ with tab_collab:
     else:
         st.info("Aucune compétence ne vous est actuellement attribuée.")
 
+# Onglet spécifique aux managers
+if manager:
+    with tab_manager:
+        st.subheader("Mes responsabilités organisationnelles")
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            metric_card(
+                "🏢 Secteurs dont je suis responsable",
+                nb_noeuds_responsable,
+                seuil_orange=None,
+                seuil_rouge=None,
+            )
+
+        with c2:
+            metric_card(
+                "📚 Compétences unique ou rares identifiées",
+                nb_elements_mes_noeuds,
+                seuil_orange=None,
+                seuil_rouge=None,
+            )
+
+        with c3:
+            metric_card(
+                "⚠️ Compétences sans suppléant sur mes secteurs",
+                nb_sans_suppleant,
+                seuil_orange=None,
+                seuil_rouge=1,
+            )
+
+        col_a, col_b = st.columns(2)
+
+        with col_a:
+            st.markdown("### Mes noeuds organisationnels")
+            if not mes_noeuds.empty:
+                st.dataframe(mes_noeuds, use_container_width=True, hide_index=True)
+            else:
+                st.info("Vous n'êtes responsable d'aucun noeud organisationnel.")
+
+        with col_b:
+            st.markdown("### Compétences sans suppléant")
+            if not elements_sans_suppleant.empty:
+                st.dataframe(
+                    elements_sans_suppleant, use_container_width=True, hide_index=True
+                )
+            else:
+                st.success(
+                    "Toutes les compétences de vos noeuds ont au moins un suppléant."
+                )
+
+# Onglet spécifique aux RH
 if rh:
     with tab_RH:
 

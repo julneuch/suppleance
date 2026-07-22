@@ -1,14 +1,19 @@
 import streamlit as st
 import pandas as pd
 
-from data import ouvrir_organisation, ecrire_organisation, ouvrir_collaborateurs
+from data import (
+    ouvrir_organisation,
+    ecrire_organisation,
+    ouvrir_collaborateurs_managers,
+    ouvrir_collaborateurs,
+)
 
 st.markdown("""
     # Gestion de l'organisation
     Cette page permet de gérer l'organisation et ses différentes structures.
     """)
 
-collaborateurs = ouvrir_collaborateurs()["collaborateur"].tolist()
+managers = ouvrir_collaborateurs_managers()["collaborateur"].tolist()
 st.session_state.orga = ouvrir_organisation()
 
 
@@ -22,7 +27,7 @@ edited_df = st.data_editor(
             "Responsable",
             help="Choisis le responsable du noeud",
             width="medium",
-            options=collaborateurs,
+            options=managers,
             required=True,
         ),
     },
