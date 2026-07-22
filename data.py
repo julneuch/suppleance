@@ -8,9 +8,19 @@ COLLABORATEUR_PATH = os.path.join(DATA_DIR, "collaborateurs.json")
 ORGA_PATH = os.path.join(DATA_DIR, "organisation.json")
 INVENTAIRE_PATH = os.path.join(DATA_DIR, "inventaire.json")
 
-NATURES = ("Connaissance clé", "Exécution d'une tâche", "Application-outil")
-STATUS = ("Incomplet", "Complet")
-CARACTERE = ("Unique", "Rare")
+NATURES = (
+    "🧠 Connaissance clé",
+    "📋 Exécution d'une tâche",
+    "💻 Application-outil",
+)
+STATUS = (
+    "🟡 Incomplet",
+    "🟢 Complet",
+)
+CARACTERE = (
+    "⭐ Unique",
+    "💎 Rare",
+)
 DIVISION = ("Entreprise", "Crédit")
 
 if not os.path.exists(DATA_DIR):
@@ -289,8 +299,10 @@ def ecrire_inventaire(inventaire, path=INVENTAIRE_PATH):
     inventaire.to_json(INVENTAIRE_PATH, orient="records", indent=4, force_ascii=False)
 
 
-def organisation_to_dict():
+def organisation_to_dict(user=None):
     orga = ouvrir_organisation()
+    if user:
+        orga = orga[orga["responsable"] == user]
     id_to_label = {
         row["id"]: f"{row['division']} / {row['departement']} / {row['secteur']}"
         for _, row in orga.iterrows()
