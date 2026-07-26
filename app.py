@@ -33,14 +33,33 @@ with st.sidebar:
 
 
 pg = st.navigation(
-    [
-        st.Page("pages/home.py", title="Home", icon=":material/home:"),
-        st.Page(
-            "pages/collaborateurs.py", title="Collaborateurs", icon=":material/group:"
-        ),
-        st.Page("pages/organisation.py", title="Organisation", icon=":material/build:"),
-        st.Page("pages/inventaire.py", title="Inventaire", icon=":material/list:"),
-    ]
+    {
+        "Home": [
+            st.Page("pages/home.py", title="Home", icon=":material/home:"),
+        ],
+        "Orga Banque": [
+            st.Page(
+                "pages/collaborateurs.py",
+                title="Collaborateurs",
+                icon=":material/group:",
+            ),
+            st.Page(
+                "pages/organisation.py", title="Organisation", icon=":material/build:"
+            ),
+        ],
+        "Saisie": [
+            st.Page(
+                "pages/saisie_collab.py",
+                title="Saisie Collaborateur",
+                icon=":material/edit:",
+            ),
+            st.Page(
+                "pages/inventaire.py",
+                title="Inventaire Manager",
+                icon=":material/list:",
+            ),
+        ],
+    }
 )
 
 pg.run()

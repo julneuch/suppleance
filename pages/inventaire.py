@@ -21,6 +21,7 @@ st.markdown("""
 inventaire = ouvrir_inventaire()
 collabs = ouvrir_collaborateurs()
 orga = ouvrir_organisation()
+collabs = collabs.merge(orga, left_on="noeud", right_on="id", how="left")
 
 noeuds = organisation_to_dict(user=collaborateur_connecte)
 

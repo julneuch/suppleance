@@ -16,6 +16,8 @@ NATURES = (
 STATUS = (
     "🟡 Incomplet",
     "🟢 Complet",
+    "📤 Proposé",
+    "❌Refusé",
 )
 CARACTERE = (
     "⭐ Unique",
@@ -32,6 +34,7 @@ def ouvrir_collaborateurs(path=COLLABORATEUR_PATH):
         collabs = default_collaborateurs()
     with open(path, mode="r", encoding="utf-8") as file:
         collabs = pd.read_json(file, orient="records")
+
     return collabs
 
 
@@ -55,58 +58,65 @@ def default_collaborateurs():
         "Jules Dupont": {
             "date_in": "2023-01-01",
             "date_out": None,
-            "division": DIVISION[0],
+            # "division": DIVISION[0],
             "RH": False,
             "Manager": False,
             "fonction": "Analyste",
+            "noeud": 1,
         },
         "Marie Curie": {
             "date_in": "2025-12-01",
             "date_out": "2026-01-31",
-            "division": DIVISION[1],
+            # "division": DIVISION[1],
             "RH": False,
             "Manager": False,
             "fonction": "Chercheuse",
+            "noeud": 2,
         },
         "Albert Einstein": {
             "date_in": "2009-03-01",
             "date_out": None,
-            "division": DIVISION[0],
+            # "division": DIVISION[0],
             "RH": False,
             "Manager": True,
             "fonction": "Physicien",
+            "noeud": 1,
         },
         "Julien Rey": {
             "date_in": "2019-05-01",
             "date_out": None,
-            "division": DIVISION[0],
+            # "division": DIVISION[0],
             "RH": False,
             "Manager": True,
             "fonction": "Développeur",
+            "noeud": 4,
         },
         "Christophe Lopez": {
             "date_in": "2017-05-01",
             "date_out": None,
-            "division": DIVISION[0],
+            # "division": DIVISION[0],
             "RH": True,
             "Manager": True,
             "fonction": "Business Partner",
+            "noeud": 2,
         },
         "Richard Duc": {
             "date_in": "2021-07-01",
             "date_out": None,
-            "division": DIVISION[1],
+            # "division": DIVISION[1],
             "RH": False,
             "Manager": True,
             "fonction": "Designer",
+            "noeud": 5,
         },
         "Maryline Spycher": {
             "date_in": "2011-01-01",
             "date_out": None,
-            "division": DIVISION[1],
+            # "division": DIVISION[1],
             "RH": False,
             "Manager": True,
             "fonction": "Consultante",
+            "noeud": 7,
         },
     }
     df = pd.DataFrame.from_dict(collabs, orient="index").reset_index()

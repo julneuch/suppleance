@@ -7,6 +7,11 @@ st.markdown("""
     """)
 
 collaborateurs = ouvrir_collaborateurs()
+noeuds = organisation_to_dict()
+
+
+def label_noeud(noeud_id: int) -> str:
+    return noeuds[noeud_id]
 
 
 edited_df = st.data_editor(
@@ -15,11 +20,12 @@ edited_df = st.data_editor(
     num_rows="dynamic",
     hide_index=True,
     column_config={
-        "division": st.column_config.SelectboxColumn(
-            "Division",
-            help="Choisis la division du collaborateur",
+        "noeud": st.column_config.SelectboxColumn(
+            "Nœud",
+            help="Choisis le nœud du collaborateur",
             width="medium",
-            options=DIVISION,
+            options=list(noeuds.keys()),
+            format_func=label_noeud,
             required=True,
         ),
     },
