@@ -85,7 +85,7 @@ mes_elements = mes_elements[
         "Suppléant 1",
         "Suppléant 2",
         "status",
-        "pourcentage",
+        "delai",
         "documentation",
         "update_at",
     ]

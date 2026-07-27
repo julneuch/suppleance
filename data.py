@@ -14,14 +14,21 @@ NATURES = (
     "💻 Application-outil",
 )
 STATUS = (
-    "🟡 Incomplet",
+    "🟡 Initié",
     "🟢 Complet",
     "📤 Proposé",
-    "❌Refusé",
+    "❌ Refusé",
+    "🔴 Non Initié",
 )
 CARACTERE = (
     "⭐ Unique",
     "💎 Rare",
+)
+DELAI = (
+    "3️⃣ 3 mois",
+    "6️⃣ 6 mois",
+    "9️⃣ 9 mois",
+    "1️⃣2️⃣ 12 mois",
 )
 DIVISION = ("Entreprise", "Crédit")
 
@@ -220,7 +227,6 @@ def default_inventaire():
             "Suppléant 1": "Christophe Lopez",
             "Suppléant 2": None,
             "status": STATUS[1],
-            "pourcentage": 100,
             "documentation": [],
             "update_at": "2026-07-22",
         },
@@ -233,7 +239,7 @@ def default_inventaire():
             "Suppléant 1": None,
             "Suppléant 2": None,
             "status": STATUS[0],
-            "pourcentage": 0,
+            "delai": DELAI[0],
             "documentation": [],
             "update_at": "2026-07-22",
         },
@@ -245,8 +251,8 @@ def default_inventaire():
             "titulaire": "Albert Einstein",
             "Suppléant 1": "Christophe Lopez",
             "Suppléant 2": None,
-            "status": STATUS[0],
-            "pourcentage": 50,
+            "status": STATUS[4],
+            "delai": DELAI[2],
             "documentation": ["procédure", "tutoriel"],
             "update_at": "2026-07-22",
         },
@@ -259,7 +265,7 @@ def default_inventaire():
             "Suppléant 1": None,
             "Suppléant 2": None,
             "status": STATUS[0],
-            "pourcentage": 0,
+            "delai": DELAI[1],
             "documentation": ["Guide"],
             "update_at": "2026-07-22",
         },
@@ -272,7 +278,7 @@ def default_inventaire():
             "Suppléant 1": None,
             "Suppléant 2": None,
             "status": STATUS[0],
-            "pourcentage": 0,
+            "delai": DELAI[3],
             "documentation": [],
             "update_at": "2026-07-22",
         },
@@ -301,7 +307,7 @@ def ecrire_inventaire(inventaire, path=INVENTAIRE_PATH):
             "Suppléant 1",
             "Suppléant 2",
             "status",
-            "pourcentage",
+            "delai",
             "documentation",
             "update_at",
         ]

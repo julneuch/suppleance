@@ -2,6 +2,7 @@ import streamlit as st
 from data import (
     CARACTERE,
     NATURES,
+    DELAI,
     ecrire_inventaire,
     ouvrir_inventaire,
     ouvrir_collaborateurs,
@@ -103,13 +104,12 @@ if selected_id:
                 width="large",
                 required=True,
             ),
-            "pourcentage": st.column_config.NumberColumn(
-                "Pourcentage",
-                help="Pourcentage de maîtrise de la compétence",
-                min_value=0,
-                max_value=100,
-                step=1,
-                format="%d%%",
+            "delai": st.column_config.SelectboxColumn(
+                "Délai",
+                help="Choisis le délai",
+                width="medium",
+                options=DELAI,
+                default=None,
             ),
         },
     )
