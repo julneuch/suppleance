@@ -1,8 +1,10 @@
 import streamlit as st
+import pandas as pd
 from data import (
     CARACTERE,
     NATURES,
     DELAI,
+    TEMPO,
     ecrire_inventaire,
     ouvrir_inventaire,
     ouvrir_collaborateurs,
@@ -49,46 +51,58 @@ if selected_id:
         use_container_width=True,
         num_rows="dynamic",
         hide_index=True,
+        column_order=[
+            "status",
+            "delai",
+            "titulaire",
+            "description",
+            "nature",
+            "caractère",
+            "tempo",
+            "Suppléant 1",
+            "Suppléant 2",
+            "documentation",
+        ],
         column_config={
             "titulaire": st.column_config.SelectboxColumn(
                 "Titulaire",
                 help="Choisis le titulaire du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=True,
             ),
             "Suppléant 1": st.column_config.SelectboxColumn(
                 "Suppléant 1",
                 help="Choisis le suppléant 1 du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=False,
             ),
             "Suppléant 2": st.column_config.SelectboxColumn(
                 "Suppléant 2",
                 help="Choisis le suppléant 2 du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=False,
             ),
             "nature": st.column_config.SelectboxColumn(
                 "Nature de la compétence",
                 help="Choisis la nature de la compétence",
-                width="medium",
+                # width="medium",
                 options=NATURES,
                 required=True,
             ),
             "caractère": st.column_config.SelectboxColumn(
                 "Caractère de la compétence",
                 help="Choisis le caractère de la compétence",
-                width="medium",
+                # width="medium",
                 options=CARACTERE,
                 required=True,
             ),
             "status": st.column_config.SelectboxColumn(
                 "Status",
                 help="Choisis le statut",
-                width="medium",
+                # width="medium",
                 options=STATUS,
                 required=True,
                 default="Inactif",
@@ -107,14 +121,33 @@ if selected_id:
             "delai": st.column_config.SelectboxColumn(
                 "Délai",
                 help="Choisis le délai",
-                width="medium",
+                # width="medium",
                 options=DELAI,
+                default=None,
+            ),
+            "tempo": st.column_config.SelectboxColumn(
+                "Temporalité",
+                help="Choisis la temporalité",
+                # width="medium",
+                options=TEMPO,
                 default=None,
             ),
         },
     )
 
     if st.button("Enregistrer"):
+
+        max_id = pd.to_numeric(inventaire["id_ligne"], errors="coerce").max()
+        max_id = 0 if pd.isna(max_id) else int(max_id)
+        masque_id_null = edited_df["id_ligne"].isna() | (edited_df["id_ligne"] == "")
+        nb_nouveaux = masque_id_null.sum()
+        if nb_nouveaux > 0:
+            edited_df.loc[masque_id_null, "id_ligne"] = range(
+                max_id + 1,
+                max_id + 1 + nb_nouveaux,
+            )
+        edited_df["noeud"] = int(selected_id)
+
         inventaire_maj = inventaire.copy()
         inventaire_maj = inventaire_maj[inventaire_maj["noeud"] != selected_id]
         inventaire_maj = __import__("pandas").concat(
