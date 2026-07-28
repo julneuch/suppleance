@@ -23,8 +23,11 @@ inventaire = ouvrir_inventaire()
 if "id_ligne" not in inventaire.columns:
     inventaire = inventaire.reset_index(drop=True)
     inventaire["id_ligne"] = inventaire.index.astype(str)
+
 collabs = ouvrir_collaborateurs()
+
 orga = ouvrir_organisation()
+
 collabs = collabs.merge(orga, left_on="noeud", right_on="id", how="left")
 
 user = collabs[collabs["collaborateur"] == collaborateur_connecte].copy()
@@ -33,7 +36,7 @@ selected_id = user["noeud"].values[0]
 
 if selected_id:
     st.markdown("""
-    ## Compétence ou je suis déjà identifié comme titulaire ou suppléant.
+    ### Compétence ou je suis déjà identifié comme titulaire ou suppléant.
     """)
     inventaire_filtre = inventaire[
         inventaire["titulaire"].eq(collaborateur_connecte)
@@ -49,13 +52,14 @@ if selected_id:
         [
             "id_ligne",
             "titulaire",
+            "description",
             "Suppléant 1",
             "Suppléant 2",
             "nature",
             "caractère",
             "status",
-            "noeud",
-            "description",
+            # "noeud",
+            "documentation",
         ]
     ].copy()
 
@@ -65,19 +69,19 @@ if selected_id:
         hide_index=True,
         on_select="rerun",
         selection_mode="single-row",
-        column_config={
-            "id_ligne": None,  # masque la colonne si ta version le supporte, sinon enlève-la de l'affichage
-        },
+        column_config={"id_ligne": None},
     )
 
     selected_rows = event.selection.rows
 
+    # Gestion de la modification des compétences déjà proposées.
+    # Seules les compétences avec un statut proposées sont modifiables.
     if selected_rows:
         selected_index = selected_rows[0]
         row = affichage_df.iloc[selected_index]
         selected_row_id = row["id_ligne"]
 
-        st.markdown("## Détail de la ligne sélectionnée")
+        st.markdown("### Détail de la ligne sélectionnée")
 
         if row["status"] != STATUS[2]:
             st.info(
@@ -89,6 +93,30 @@ if selected_id:
             with st.form(f"edit_form_{selected_row_id}"):
                 titulaire = st.text_input(
                     "Titulaire", value=row["titulaire"], disabled=True
+                )
+
+                description = st.text_area(
+                    "Description",
+                    value=row["description"] if pd.notna(row["description"]) else "",
+                    height=120,
+                )
+
+                nature = st.selectbox(
+                    "Nature de la compétence",
+                    options=NATURES,
+                    index=(
+                        NATURES.index(row["nature"]) if row["nature"] in NATURES else 0
+                    ),
+                )
+
+                caractere = st.selectbox(
+                    "Caractère de la compétence",
+                    options=CARACTERE,
+                    index=(
+                        CARACTERE.index(row["caractère"])
+                        if row["caractère"] in CARACTERE
+                        else 0
+                    ),
                 )
 
                 suppleant_1 = st.selectbox(
@@ -129,30 +157,16 @@ if selected_id:
                     ),
                 )
 
-                nature = st.selectbox(
-                    "Nature de la compétence",
-                    options=NATURES,
-                    index=(
-                        NATURES.index(row["nature"]) if row["nature"] in NATURES else 0
+                documentation_text = st.text_area(
+                    "Documentation",
+                    value=(
+                        "\n".join(row["documentation"])
+                        if isinstance(row["documentation"], list)
+                        else ""
                     ),
-                )
-
-                caractere = st.selectbox(
-                    "Caractère de la compétence",
-                    options=CARACTERE,
-                    index=(
-                        CARACTERE.index(row["caractère"])
-                        if row["caractère"] in CARACTERE
-                        else 0
-                    ),
-                )
-
-                description = st.text_area(
-                    "Description",
-                    value=row["description"] if pd.notna(row["description"]) else "",
                     height=120,
+                    help="Une entrée par ligne",
                 )
-
                 submit = st.form_submit_button("Enregistrer les modifications")
 
             if submit:
@@ -188,26 +202,48 @@ if selected_id:
                 inventaire_reload.loc[mask, "titulaire"] = collaborateur_connecte
                 inventaire_reload.loc[mask, "noeud"] = int(selected_id)
 
+                documentation_list = [
+                    line.strip()
+                    for line in documentation_text.split("\n")
+                    if line.strip()
+                ]
+                inventaire_reload.at[
+                    inventaire_reload.index[mask][0], "documentation"
+                ] = documentation_list
+
                 ecrire_inventaire(inventaire_reload)
                 st.success("Compétence mise à jour.")
                 st.rerun()
 
+    # Saisie des nouvelles comptences proposées
+    # par le collab
     st.markdown("""
     ## Proposer une nouvelle compétence :
     """)
 
-    empty_df = pd.DataFrame(columns=inventaire_filtre.columns)
-
+    empty_df = inventaire.head(0).copy()
+    print(empty_df.dtypes)
     edited_df = st.data_editor(
         empty_df,
         use_container_width=True,
+        width="stretch",
         num_rows="dynamic",
         hide_index=True,
+        column_order=[
+            "status",
+            "titulaire",
+            "nature",
+            "caractère",
+            "description",
+            "Suppléant 1",
+            "Suppléant 2",
+            "documentation",
+        ],
         column_config={
             "titulaire": st.column_config.SelectboxColumn(
                 "Titulaire",
                 help="Choisis le titulaire du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=True,
                 disabled=True,
@@ -216,35 +252,35 @@ if selected_id:
             "Suppléant 1": st.column_config.SelectboxColumn(
                 "Suppléant 1",
                 help="Choisis le suppléant 1 du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=False,
             ),
             "Suppléant 2": st.column_config.SelectboxColumn(
                 "Suppléant 2",
                 help="Choisis le suppléant 2 du noeud",
-                width="medium",
+                # width="medium",
                 options=collaborateurs_filtre["collaborateur"].tolist(),
                 required=False,
             ),
             "nature": st.column_config.SelectboxColumn(
                 "Nature de la compétence",
                 help="Choisis la nature de la compétence",
-                width="medium",
+                # width="medium",
                 options=NATURES,
                 required=True,
             ),
             "caractère": st.column_config.SelectboxColumn(
                 "Caractère de la compétence",
                 help="Choisis le caractère de la compétence",
-                width="medium",
+                # width="medium",
                 options=CARACTERE,
                 required=True,
             ),
             "status": st.column_config.SelectboxColumn(
                 "Status",
                 help="Choisis le statut",
-                width="medium",
+                # width="medium",
                 options=STATUS,
                 required=True,
                 default=STATUS[2],
@@ -254,6 +290,9 @@ if selected_id:
                 "Noeud",
                 default=int(selected_id),
                 disabled=True,
+            ),
+            "documentation": st.column_config.ListColumn(
+                "Documentation", required=False
             ),
             "description": st.column_config.TextColumn(
                 "Description",
@@ -266,15 +305,13 @@ if selected_id:
 
     if st.button("Enregistrer"):
 
+        max_id = pd.to_numeric(inventaire["id_ligne"], errors="coerce").max()
+        max_id = 0 if pd.isna(max_id) else int(max_id)
+
+        edited_df["noeud"] = int(selected_id)
+        edited_df["id_ligne"] = range(max_id + 1, max_id + 1 + len(edited_df))
         inventaire_maj = inventaire.copy()
 
-        masque_remplace = (
-            inventaire_maj["noeud"].eq(selected_id)
-            & inventaire_maj["status"].eq(STATUS[2])
-            & inventaire_maj["titulaire"].eq(collaborateur_connecte)
-        )
-
-        inventaire_maj = inventaire_maj.loc[~masque_remplace].copy()
         inventaire_maj = pd.concat(
             [inventaire_maj, edited_df],
             ignore_index=True,

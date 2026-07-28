@@ -219,6 +219,7 @@ def default_inventaire():
     """
     inventaire = [
         {
+            "id_ligne": 1,
             "noeud": 1,
             "nature": NATURES[0],
             "caractère": CARACTERE[0],
@@ -231,6 +232,7 @@ def default_inventaire():
             "update_at": "2026-07-22",
         },
         {
+            "id_ligne": 2,
             "noeud": 1,
             "nature": NATURES[1],
             "caractère": CARACTERE[1],
@@ -244,6 +246,7 @@ def default_inventaire():
             "update_at": "2026-07-22",
         },
         {
+            "id_ligne": 3,
             "noeud": 2,
             "nature": NATURES[1],
             "caractère": CARACTERE[1],
@@ -257,6 +260,7 @@ def default_inventaire():
             "update_at": "2026-07-22",
         },
         {
+            "id_ligne": 4,
             "noeud": 2,
             "nature": NATURES[1],
             "caractère": CARACTERE[1],
@@ -270,6 +274,7 @@ def default_inventaire():
             "update_at": "2026-07-22",
         },
         {
+            "id_ligne": 5,
             "noeud": 2,
             "nature": NATURES[1],
             "caractère": CARACTERE[1],
@@ -310,6 +315,7 @@ def get_inventaire_propose(user=None):
 def ecrire_inventaire(inventaire, path=INVENTAIRE_PATH):
     inventaire = inventaire[
         [
+            "id_ligne",
             "noeud",
             "nature",
             "caractère",
