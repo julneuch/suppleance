@@ -7,6 +7,7 @@ from data import (
     ouvrir_inventaire,
     ouvrir_collaborateurs,
     STATUS,
+    TEMPO,
     ouvrir_organisation,
 )
 
@@ -53,11 +54,12 @@ if selected_id:
             "id_ligne",
             "titulaire",
             "description",
-            "Suppléant 1",
-            "Suppléant 2",
             "nature",
             "caractère",
             "status",
+            "tempo",
+            "Suppléant 1",
+            "Suppléant 2",
             # "noeud",
             "documentation",
         ]
@@ -116,6 +118,14 @@ if selected_id:
                         CARACTERE.index(row["caractère"])
                         if row["caractère"] in CARACTERE
                         else 0
+                    ),
+                )
+
+                tempo = st.selectbox(
+                    "Temporalité de la compétence",
+                    options=TEMPO,
+                    index=(
+                        TEMPO.index(row["tempo"]) if row["tempo"] in CARACTERE else 0
                     ),
                 )
 
@@ -198,6 +208,7 @@ if selected_id:
                 )
                 inventaire_reload.loc[mask, "nature"] = nature
                 inventaire_reload.loc[mask, "caractère"] = caractere
+                inventaire_reload.loc[mask, "tempo"] = tempo
                 inventaire_reload.loc[mask, "description"] = description
                 inventaire_reload.loc[mask, "titulaire"] = collaborateur_connecte
                 inventaire_reload.loc[mask, "noeud"] = int(selected_id)
@@ -232,9 +243,10 @@ if selected_id:
         column_order=[
             "status",
             "titulaire",
+            "description",
             "nature",
             "caractère",
-            "description",
+            "tempo",
             "Suppléant 1",
             "Suppléant 2",
             "documentation",
@@ -275,6 +287,13 @@ if selected_id:
                 help="Choisis le caractère de la compétence",
                 # width="medium",
                 options=CARACTERE,
+                required=True,
+            ),
+            "tempo": st.column_config.SelectboxColumn(
+                "Temporalité",
+                help="Choisis la temporalité de la compétence",
+                # width="medium",
+                options=TEMPO,
                 required=True,
             ),
             "status": st.column_config.SelectboxColumn(

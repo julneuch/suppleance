@@ -30,6 +30,13 @@ DELAI = (
     "9️⃣ 9 mois",
     "1️⃣2️⃣ 12 mois",
 )
+TEMPO = (
+    "🚀 jusqu'à 1 semaine",
+    "⏱️ jusqu'à 1 mois",
+    "⏲️ jusqu'à 3 mois",
+    "⏳ jusqu'à 6 mois",
+    "🕰️ au delà de 6 mois",
+)
 DIVISION = ("Entreprise", "Crédit")
 
 if not os.path.exists(DATA_DIR):
@@ -230,6 +237,7 @@ def default_inventaire():
             "status": STATUS[1],
             "documentation": [],
             "update_at": "2026-07-22",
+            "tempo": TEMPO[1],
         },
         {
             "id_ligne": 2,
@@ -244,6 +252,7 @@ def default_inventaire():
             "delai": DELAI[0],
             "documentation": [],
             "update_at": "2026-07-22",
+            "tempo": TEMPO[0],
         },
         {
             "id_ligne": 3,
@@ -258,6 +267,7 @@ def default_inventaire():
             "delai": DELAI[2],
             "documentation": ["procédure", "tutoriel"],
             "update_at": "2026-07-22",
+            "tempo": TEMPO[3],
         },
         {
             "id_ligne": 4,
@@ -272,6 +282,7 @@ def default_inventaire():
             "delai": DELAI[1],
             "documentation": ["Guide"],
             "update_at": "2026-07-22",
+            "tempo": TEMPO[1],
         },
         {
             "id_ligne": 5,
@@ -286,6 +297,7 @@ def default_inventaire():
             "delai": DELAI[3],
             "documentation": [],
             "update_at": "2026-07-22",
+            "tempo": TEMPO[1],
         },
     ]
     df = pd.DataFrame(inventaire)
@@ -320,6 +332,7 @@ def ecrire_inventaire(inventaire, path=INVENTAIRE_PATH):
             "nature",
             "caractère",
             "description",
+            "tempo",
             "titulaire",
             "Suppléant 1",
             "Suppléant 2",
