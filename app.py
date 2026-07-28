@@ -1,5 +1,25 @@
 import streamlit as st
-from data import ouvrir_collaborateurs
+from data import ouvrir_collaborateurs, get_inventaire_propose
+
+
+def circled_number_black(n: int) -> str:
+    if n > 10:
+        n = 10
+    black = {
+        0: "",
+        1: "1️⃣",
+        2: "2️⃣",
+        3: "3️⃣",
+        4: "4️⃣",
+        5: "5️⃣",
+        6: "6️⃣",
+        7: "7️⃣",
+        8: "8️⃣",
+        9: "9️⃣",
+        10: "🔟",
+    }
+    return black.get(n, f"({n})")
+
 
 users = ouvrir_collaborateurs().copy()
 records = users.to_dict("records")
@@ -31,6 +51,7 @@ with st.sidebar:
 
     st.divider()
 
+propals = get_inventaire_propose(st.session_state["collaborateur_connecte"])
 
 pg = st.navigation(
     {
@@ -55,7 +76,7 @@ pg = st.navigation(
             ),
             st.Page(
                 "pages/inventaire.py",
-                title="Inventaire Manager",
+                title=f"Inventaire Manager {circled_number_black(len(propals))}",
                 icon=":material/list:",
             ),
         ],

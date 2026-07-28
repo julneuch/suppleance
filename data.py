@@ -296,6 +296,17 @@ def ouvrir_inventaire(path=INVENTAIRE_PATH):
     return inventaire
 
 
+def get_inventaire_propose(user=None):
+    """Retourne toutes les saisies avec un statut proposé pour un utilisateur concerné"""
+    inventaire = ouvrir_inventaire()
+    noeuds = organisation_to_dict(user)
+    inventaire_propose = inventaire[inventaire["status"] == STATUS[2]]
+    inventaire_propose = inventaire_propose[
+        inventaire_propose["noeud"].isin(noeuds.keys())
+    ]
+    return inventaire_propose
+
+
 def ecrire_inventaire(inventaire, path=INVENTAIRE_PATH):
     inventaire = inventaire[
         [
