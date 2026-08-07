@@ -341,16 +341,15 @@ if rh:
             id_vars=["division", "nb_competences", "taux_sans_suppleant"],
             value_vars=["avec_suppleant", "sans_suppleant"],
             var_name="statut_suppleance",
-            value_name="nb_competences_statut",
+            value_name="Competences",
         )
 
         rh_division_long["part"] = (
-            rh_division_long["nb_competences_statut"]
-            / rh_division_long["nb_competences"]
+            rh_division_long["Competences"] / rh_division_long["nb_competences"]
         )
 
         rh_division_long["label_barre"] = rh_division_long.apply(
-            lambda row: f"{int(row['nb_competences_statut'])} ({row['part']:.0%})",
+            lambda row: f"{int(row['Competences'])} ({row['part']:.0%})",
             axis=1,
         )
 
@@ -387,16 +386,16 @@ if rh:
             id_vars=["label_dep", "nb_competences", "taux_sans_suppleant"],
             value_vars=["avec_suppleant", "sans_suppleant"],
             var_name="statut_suppleance",
-            value_name="nb_competences_statut",
+            value_name="Competences",
         )
 
         top10_departement_long["part"] = (
-            top10_departement_long["nb_competences_statut"]
+            top10_departement_long["Competences"]
             / top10_departement_long["nb_competences"]
         )
 
         top10_departement_long["label_barre"] = top10_departement_long.apply(
-            lambda row: f"{int(row['nb_competences_statut'])} ({row['part']:.0%})",
+            lambda row: f"{int(row['Competences'])} ({row['part']:.0%})",
             axis=1,
         )
 
@@ -405,7 +404,7 @@ if rh:
         with col1:
             fig_div = px.bar(
                 rh_division_long,
-                x="# Compétences",
+                x="Competences",
                 y="division",
                 color="statut_suppleance",
                 orientation="h",
@@ -446,7 +445,7 @@ if rh:
         with col2:
             fig_dep = px.bar(
                 top10_departement_long,
-                x="# Compétences",
+                x="Competences",
                 y="label_dep",
                 color="statut_suppleance",
                 orientation="h",
