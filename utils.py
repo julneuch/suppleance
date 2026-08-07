@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-def metric_card(title, value, seuil_orange=None, seuil_rouge=None):
+def metric_card(title, value, seuil_orange=None, seuil_rouge=None, percent=False):
     bg = "#f0f2f6"
     border = "#d9d9d9"
     text = "#111111"
@@ -15,6 +15,8 @@ def metric_card(title, value, seuil_orange=None, seuil_rouge=None):
         border = "#f39c12"
         text = "#b26a00"
 
+    display_value = f"{value:.2%}" if percent else value
+
     st.markdown(
         f"""
         <div style="
@@ -26,7 +28,7 @@ def metric_card(title, value, seuil_orange=None, seuil_rouge=None):
             margin:4px 0 8px 0;
         ">
             <div style="font-size:0.95rem; color:#555; margin-bottom:6px;">{title}</div>
-            <div style="font-size:2rem; font-weight:700; color:{text};">{value}</div>
+            <div style="font-size:2rem; font-weight:700; color:{text};">{display_value}</div>
         </div>
         """,
         unsafe_allow_html=True,
