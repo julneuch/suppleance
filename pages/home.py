@@ -405,7 +405,7 @@ if rh:
         with col1:
             fig_div = px.bar(
                 rh_division_long,
-                x="nb_competences_statut",
+                x="# Compétences",
                 y="division",
                 color="statut_suppleance",
                 orientation="h",
@@ -446,7 +446,7 @@ if rh:
         with col2:
             fig_dep = px.bar(
                 top10_departement_long,
-                x="nb_competences_statut",
+                x="# Compétences",
                 y="label_dep",
                 color="statut_suppleance",
                 orientation="h",
