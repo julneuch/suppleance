@@ -13,16 +13,11 @@ NATURES = (
     "📋 Exécution d'une tâche",
     "💻 Application-outil",
 )
-STATUS = (
-    "🟡 Initié",
-    "🟢 Complet",
-    "📤 Proposé",
-    "❌ Refusé",
-    "🔴 Non Initié",
-)
+STATUS = ("🟡 Suspend", "✅ Accepté", "📤 Proposé", "❌ Refusé")
 CARACTERE = (
-    "⭐ Unique",
-    "💎 Rare",
+    "🔴 Unique",
+    "🟡 Rare - Suppléance dégradée",
+    "🟢 Rare - Suppléance totale",
 )
 DELAI = (
     "3️⃣ 3 mois",
@@ -263,7 +258,7 @@ def default_inventaire():
             "titulaire": "Albert Einstein",
             "Suppléant 1": "Christophe Lopez",
             "Suppléant 2": None,
-            "status": STATUS[4],
+            "status": STATUS[3],
             "delai": DELAI[2],
             "documentation": ["procédure", "tutoriel"],
             "update_at": "2026-07-22",

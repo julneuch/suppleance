@@ -53,14 +53,14 @@ if selected_id:
         hide_index=True,
         column_order=[
             "status",
-            "delai",
+            # "delai",
             "titulaire",
             "description",
             "nature",
             "caractère",
             "tempo",
             "Suppléant 1",
-            "Suppléant 2",
+            # "Suppléant 2",
             "documentation",
         ],
         column_config={
@@ -155,6 +155,97 @@ if selected_id:
         )
         ecrire_inventaire(inventaire_maj)
         st.success("Inventaire enregistré.")
+
+    options_collaborateurs = [""] + collaborateurs_filtre[
+        "collaborateur"
+    ].dropna().tolist()
+    with st.expander("Ajouter une nouvelle compétence", expanded=False):
+        with st.form("new_competence_form", clear_on_submit=True):
+            titulaire_new = st.selectbox(
+                "Titulaire",
+                options=options_collaborateurs,
+                index=0,
+            )
+
+            description_new = st.text_area(
+                "Description",
+                height=120,
+                help="Décris la connaissance ou le savoir-faire",
+            )
+
+            nature_new = st.selectbox(
+                "Nature de la compétence",
+                options=NATURES,
+                index=0,
+            )
+
+            caractere_new = st.selectbox(
+                "Caractère de la compétence",
+                options=CARACTERE,
+                index=0,
+            )
+
+            tempo_new = st.selectbox(
+                "Temporalité de la compétence",
+                options=TEMPO,
+                index=0,
+            )
+
+            suppleant_1_new = st.selectbox(
+                "Suppléant 1",
+                options=options_collaborateurs,
+                index=0,
+            )
+
+            documentation_text_new = st.text_area(
+                "Documentation",
+                height=120,
+                help="Une entrée par ligne",
+            )
+
+            submit_new = st.form_submit_button("Enregistrer la nouvelle compétence")
+
+        if submit_new:
+            if not description_new.strip():
+                st.warning("La description est obligatoire.")
+                st.stop()
+
+            inventaire_reload = ouvrir_inventaire().copy()
+
+            if "id_ligne" not in inventaire_reload.columns:
+                inventaire_reload = inventaire_reload.reset_index(drop=True)
+                inventaire_reload["id_ligne"] = inventaire_reload.index.astype(str)
+
+            max_id = pd.to_numeric(inventaire_reload["id_ligne"], errors="coerce").max()
+            max_id = 0 if pd.isna(max_id) else int(max_id)
+
+            documentation_list = [
+                line.strip()
+                for line in documentation_text_new.split("\n")
+                if line.strip()
+            ]
+
+            nouvelle_ligne = {
+                "id_ligne": str(max_id + 1),
+                "status": STATUS[2],
+                "titulaire": collaborateur_connecte,
+                "description": description_new.strip(),
+                "nature": nature_new,
+                "caractère": caractere_new,
+                "tempo": tempo_new,
+                "Suppléant 1": suppleant_1_new if suppleant_1_new != "" else None,
+                "documentation": documentation_list,
+                "noeud": int(selected_id),
+            }
+
+            inventaire_maj = pd.concat(
+                [inventaire_reload, pd.DataFrame([nouvelle_ligne])],
+                ignore_index=True,
+            )
+
+            ecrire_inventaire(inventaire_maj)
+            st.success("Nouvelle compétence enregistrée.")
+            st.rerun()
 
 else:
     st.warning("L'utilisateur n'est pas responsable d'un noeud.")

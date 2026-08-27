@@ -59,7 +59,7 @@ if selected_id:
             "status",
             "tempo",
             "Suppléant 1",
-            "Suppléant 2",
+            # "Suppléant 2",
             # "noeud",
             "documentation",
         ]
@@ -148,25 +148,6 @@ if selected_id:
                     ),
                 )
 
-                suppleant_2 = st.selectbox(
-                    "Suppléant 2",
-                    options=[""]
-                    + collaborateurs_filtre["collaborateur"].dropna().tolist(),
-                    index=(
-                        (
-                            [""]
-                            + collaborateurs_filtre["collaborateur"].dropna().tolist()
-                        ).index(row["Suppléant 2"])
-                        if pd.notna(row["Suppléant 2"])
-                        and row["Suppléant 2"]
-                        in (
-                            [""]
-                            + collaborateurs_filtre["collaborateur"].dropna().tolist()
-                        )
-                        else 0
-                    ),
-                )
-
                 documentation_text = st.text_area(
                     "Documentation",
                     value=(
@@ -202,9 +183,6 @@ if selected_id:
 
                 inventaire_reload.loc[mask, "Suppléant 1"] = (
                     suppleant_1 if suppleant_1 != "" else None
-                )
-                inventaire_reload.loc[mask, "Suppléant 2"] = (
-                    suppleant_2 if suppleant_2 != "" else None
                 )
                 inventaire_reload.loc[mask, "nature"] = nature
                 inventaire_reload.loc[mask, "caractère"] = caractere
@@ -268,12 +246,6 @@ with st.expander("Ajouter une nouvelle compétence", expanded=False):
             index=0,
         )
 
-        suppleant_2_new = st.selectbox(
-            "Suppléant 2",
-            options=options_collaborateurs,
-            index=0,
-        )
-
         documentation_text_new = st.text_area(
             "Documentation",
             height=120,
@@ -309,7 +281,6 @@ with st.expander("Ajouter une nouvelle compétence", expanded=False):
             "caractère": caractere_new,
             "tempo": tempo_new,
             "Suppléant 1": suppleant_1_new if suppleant_1_new != "" else None,
-            "Suppléant 2": suppleant_2_new if suppleant_2_new != "" else None,
             "documentation": documentation_list,
             "noeud": int(selected_id),
         }
