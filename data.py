@@ -32,7 +32,7 @@ TEMPO = (
     "⏳ jusqu'à 6 mois",
     "🕰️ au delà de 6 mois",
 )
-DIVISION = ("Entreprise", "Crédit")
+DIVISION = ("Entreprise", "Crédit", "FR")
 
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
@@ -127,6 +127,33 @@ def default_collaborateurs():
             "fonction": "Consultante",
             "noeud": 7,
         },
+        "Chef Risque": {
+            "date_in": "2011-01-01",
+            "date_out": None,
+            # "division": DIVISION[1],
+            "RH": False,
+            "Manager": True,
+            "fonction": "Chef Risque",
+            "noeud": 8,
+        },
+        "Collab Risque 1": {
+            "date_in": "2011-01-01",
+            "date_out": None,
+            # "division": DIVISION[1],
+            "RH": False,
+            "Manager": False,
+            "fonction": "Collaborateur Risque",
+            "noeud": 9,
+        },
+        "Collab Risque 2": {
+            "date_in": "2011-01-01",
+            "date_out": None,
+            # "division": DIVISION[1],
+            "RH": False,
+            "Manager": False,
+            "fonction": "Collaborateur Risque",
+            "noeud": 8,
+        },
     }
     df = pd.DataFrame.from_dict(collabs, orient="index").reset_index()
     df = df.rename(columns={"index": "collaborateur"})
@@ -206,6 +233,18 @@ def default_orga():
             "departement": "Département B2",
             "secteur": "Secteur B2-1",
             "responsable": "Maryline Spycher",
+        },
+        {
+            "division": DIVISION[2],
+            "departement": "Risque",
+            "secteur": "Secteur 1",
+            "responsable": "Chef Risque",
+        },
+        {
+            "division": DIVISION[2],
+            "departement": "Risque",
+            "secteur": "Secteur 2",
+            "responsable": "Chef Risque",
         },
     ]
     df = pd.DataFrame(orga)
