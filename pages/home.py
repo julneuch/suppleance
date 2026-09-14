@@ -67,6 +67,19 @@ elements_sans_suppleant = inventaire_mes_noeuds[
     & inventaire_mes_noeuds["Suppléant 2"].fillna("").eq("")
 ].copy()
 
+elements_sans_suppleant = elements_sans_suppleant[ [       
+        "noeud",
+        "nature",
+        "caractère",
+        "description",
+        "titulaire",
+        "Suppléant 1",
+        #"Suppléant 2",
+        "status",
+        #"delai",
+        "documentation",
+        "update_at",]
+]
 
 mes_elements = inventaire[
     (inventaire["titulaire"] == user)
@@ -85,9 +98,9 @@ mes_elements = mes_elements[
         "description",
         "titulaire",
         "Suppléant 1",
-        "Suppléant 2",
+        #"Suppléant 2",
         "status",
-        "delai",
+        #"delai",
         "documentation",
         "update_at",
     ]
