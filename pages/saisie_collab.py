@@ -7,7 +7,7 @@ from data import (
     ouvrir_inventaire,
     ouvrir_collaborateurs,
     STATUS,
-    TEMPO,
+    #TEMPO,
     ouvrir_organisation,
 )
 
@@ -57,7 +57,7 @@ if selected_id:
             "nature",
             "caractère",
             "status",
-            "tempo",
+            #"tempo",
             "Suppléant 1",
             # "Suppléant 2",
             # "noeud",
@@ -121,13 +121,13 @@ if selected_id:
                     ),
                 )
 
-                tempo = st.selectbox(
-                    "Temporalité de la compétence",
-                    options=TEMPO,
-                    index=(
-                        TEMPO.index(row["tempo"]) if row["tempo"] in CARACTERE else 0
-                    ),
-                )
+                # tempo = st.selectbox(
+                #     "Temporalité de la compétence",
+                #     options=TEMPO,
+                #     index=(
+                #         TEMPO.index(row["tempo"]) if row["tempo"] in CARACTERE else 0
+                #     ),
+                #)
 
                 suppleant_1 = st.selectbox(
                     "Suppléant 1",
@@ -186,7 +186,7 @@ if selected_id:
                 )
                 inventaire_reload.loc[mask, "nature"] = nature
                 inventaire_reload.loc[mask, "caractère"] = caractere
-                inventaire_reload.loc[mask, "tempo"] = tempo
+                #inventaire_reload.loc[mask, "tempo"] = tempo
                 inventaire_reload.loc[mask, "description"] = description
                 inventaire_reload.loc[mask, "titulaire"] = collaborateur_connecte
                 inventaire_reload.loc[mask, "noeud"] = int(selected_id)
@@ -234,11 +234,11 @@ with st.expander("Ajouter une nouvelle compétence", expanded=False):
             index=0,
         )
 
-        tempo_new = st.selectbox(
-            "Temporalité de la compétence",
-            options=TEMPO,
-            index=0,
-        )
+        #tempo_new = st.selectbox(
+        #    "Temporalité de la compétence",
+        #    options=TEMPO,
+        #    index=0,
+        #)
 
         suppleant_1_new = st.selectbox(
             "Suppléant 1",
@@ -279,7 +279,7 @@ with st.expander("Ajouter une nouvelle compétence", expanded=False):
             "description": description_new.strip(),
             "nature": nature_new,
             "caractère": caractere_new,
-            "tempo": tempo_new,
+            #"tempo": tempo_new,
             "Suppléant 1": suppleant_1_new if suppleant_1_new != "" else None,
             "documentation": documentation_list,
             "noeud": int(selected_id),

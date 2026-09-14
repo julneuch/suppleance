@@ -4,7 +4,7 @@ from data import (
     CARACTERE,
     NATURES,
     DELAI,
-    TEMPO,
+    #TEMPO,
     ecrire_inventaire,
     ouvrir_inventaire,
     ouvrir_collaborateurs,
@@ -58,7 +58,7 @@ if selected_id:
             "description",
             "nature",
             "caractère",
-            "tempo",
+            #"tempo",
             "Suppléant 1",
             # "Suppléant 2",
             "documentation",
@@ -125,13 +125,13 @@ if selected_id:
                 options=DELAI,
                 default=None,
             ),
-            "tempo": st.column_config.SelectboxColumn(
-                "Temporalité",
-                help="Choisis la temporalité",
-                # width="medium",
-                options=TEMPO,
-                default=None,
-            ),
+            #"tempo": st.column_config.SelectboxColumn(
+            #    "Temporalité",
+            #    help="Choisis la temporalité",
+            #    # width="medium",
+            #    options=TEMPO,
+            #    default=None,
+            #),
         },
     )
 
@@ -185,11 +185,11 @@ if selected_id:
                 index=0,
             )
 
-            tempo_new = st.selectbox(
-                "Temporalité de la compétence",
-                options=TEMPO,
-                index=0,
-            )
+            #tempo_new = st.selectbox(
+            #    "Temporalité de la compétence",
+            #    options=TEMPO,
+            #    index=0,
+            #)
 
             suppleant_1_new = st.selectbox(
                 "Suppléant 1",
@@ -232,7 +232,7 @@ if selected_id:
                 "description": description_new.strip(),
                 "nature": nature_new,
                 "caractère": caractere_new,
-                "tempo": tempo_new,
+                #"tempo": tempo_new,
                 "Suppléant 1": suppleant_1_new if suppleant_1_new != "" else None,
                 "documentation": documentation_list,
                 "noeud": int(selected_id),
